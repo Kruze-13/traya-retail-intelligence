@@ -23,9 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate weekly Traya flash
+      - name: Generate and send weekly Traya flash
         env:
           LOCAL_DATA_PATH: data/traya_input.xlsx
-          APP_API_KEY: test123
+          APP_API_KEY: github-action
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
-          python -c "from app import app; c=app.test_client(); r=c.get('/report?cadence=weekly', headers={'X-API-Key':'test123'}); print('Status:', r.status_code); data=r.get_json(); print('Cadence:', data.get('cadence')); print('HTML generated:', len(data.get('html_body','')), 'characters'); print('Images generated:', list(data.get('images',{}).keys())); assert r.status_code == 200"
+          python send_email.py
