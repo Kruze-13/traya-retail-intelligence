@@ -1,136 +1,224 @@
 # Traya Retail Intelligence
 
-**Retail activation analytics for promoter-led stores — from daily execution data to weekly business decisions.**
+**A retail activation analytics and automated reporting engine that turns daily promoter-store data into outlet-level actions.**
 
-> **Portfolio disclaimer:** This is a portfolio case study built with synthetic / fabricated retail data and masked store identifiers. It is not an official Traya product and does not expose confidential business data.
-
----
-
-## Project Overview
-
-Promoter-led retail programs generate a lot of daily execution data — shopper walk-ins, relevant shoppers, promoter interactions, sampling, conversion, offtake, stock availability and outlet-level performance.
-
-The challenge is not just reporting these numbers. The real business question is:
-
-> **Why is a store performing the way it is, and what should the business do about it?**
-
-This project turns daily retail activation data into a structured **Retail Intelligence engine** that helps identify:
-
-- where conversion is leaking,
-- whether low performance is driven by promoter execution or outlet quality,
-- which stores have stockout risk,
-- which outlets have headroom to scale,
-- which stores should be fixed, protected, scaled or deprioritized,
-- and what actions the business should take next.
+> **Portfolio disclaimer:** This repository is a portfolio case study built using fully synthetic / fabricated data and masked outlet identifiers. It is not an official Traya product and does not expose confidential business data.
 
 ---
 
-## Business Context
+## Why This Project Exists
 
-The analysis is designed around a promoter-led retail model for **Traya Hair Care**.
+Promoter-led retail programs generate daily operational data across shopper traffic, relevant shoppers, promoter interactions, sampling, buyers, sales and availability.
 
-The portfolio dataset contains:
+A normal MIS can tell the business **what happened**.
+
+This project was designed to answer a more useful question:
+
+> **Why is an outlet performing the way it is, and what should the business do next?**
+
+The solution combines retail funnel analysis, promoter productivity, outlet relevance, stock availability and peer benchmarking to identify stores that need intervention and stores with headroom to scale.
+
+---
+
+## Portfolio Scope
 
 | Metric | Scope |
 |---|---:|
 | Stores | 60 |
 | Working days | 24 |
 | Store-day records | 1,440 |
-| Period | 1–28 Sep 2026 |
+| Period used in the portfolio dataset | 1–28 Sep 2026 |
 | Sundays | Excluded |
-| Store identifiers | Masked |
-| Data | Fully synthetic / fabricated |
+| Outlet identifiers | Masked |
+| Published data | Fully synthetic |
 
-The data structure mirrors a realistic in-store activation workflow while protecting all sensitive information.
+The synthetic dataset preserves the analytical structure of a realistic promoter-led retail program while protecting business-sensitive information.
 
 ---
 
 ## What I Built
 
-### 1. Executive Control Tower
-A leadership view that summarizes overall retail execution and quickly answers:
+### 1. Retail Performance Analytics Engine
 
-- Are we reaching the right shoppers?
-- Are promoters converting shopper interest into buyers?
-- Which cities / channels / outlets are driving or dragging performance?
-- Where is the largest business opportunity?
+Python / pandas processing converts store-day data into business KPIs across:
 
-### 2. Conversion & Shopper Intelligence
-Breaks the funnel into:
-
-**Walk-ins → Relevant shoppers → Interactions → Samples → Buyers**
-
-This helps separate:
-
-- low shopper relevance,
-- weak promoter engagement,
-- sampling leakage,
-- and conversion problems.
-
-### 3. Availability & SKU Intelligence
-Tracks product availability and stockout intensity to identify:
-
-- stores with demand but insufficient inventory,
-- SKUs repeatedly unavailable,
-- potential lost offtake,
-- and outlet-level replenishment priorities.
-
-### 4. Outlet Opportunity Engine
-Combines execution, conversion, demand and availability signals to classify outlets into practical action buckets such as:
-
-- **Scale**
-- **Protect**
-- **Fix**
-- **Deprioritize**
-
-The goal is to turn analysis into a clear next action for the sales / retail team.
-
-### 5. Weekly Performance Flash
-A compact HTML email report designed for Gmail / Outlook delivery, summarizing:
-
+- shopper relevance,
+- promoter engagement,
+- sampling,
 - conversion,
-- relevant shoppers,
 - offtake,
-- week-on-week movement,
-- exceptions,
-- and recommended actions.
+- promoter productivity,
+- SKU availability,
+- stockout intensity,
+- outlet opportunity.
+
+The objective is not only aggregation. Metrics are structured so weak performance can be diagnosed into different operational causes.
 
 ---
 
-## Core KPIs
+### 2. Shopper Funnel Diagnostics
 
-| KPI | Definition |
+The retail journey is analysed as:
+
+**Walk-ins → Relevant Shoppers → Interactions → Samples → Buyers**
+
+This separates four very different problems:
+
+- **Low outlet relevance** — too few target shoppers are entering the outlet
+- **Low engagement** — the promoter is not engaging enough relevant shoppers
+- **Low trial generation** — interactions are not progressing to sampling / trial
+- **Low conversion** — engagement is not translating into purchase
+
+### Example: Conversion Funnel
+
+![Conversion funnel](docs/images/conversion-funnel.png)
+
+Instead of treating low sales as one problem, the funnel identifies **where the leakage occurs**.
+
+---
+
+### 3. Outlet & Promoter Productivity Intelligence
+
+Outlet performance is evaluated using metrics such as:
+
+- relevant shoppers per manday,
+- interactions per manday,
+- buyers per manday,
+- offtake per manday,
+- conversion,
+- interaction rate,
+- outlet relevance.
+
+Peer comparisons help distinguish whether performance is primarily being supported by promoter execution, outlet pull, or a combination of both.
+
+This is intentionally treated as an **analytical signal rather than causal attribution**.
+
+---
+
+### 4. Availability & Stockout Intelligence
+
+Sales opportunity is analysed alongside product availability.
+
+The solution identifies:
+
+- SKUs repeatedly unavailable,
+- high-demand outlets constrained by stock,
+- stockout intensity,
+- potential replenishment priorities,
+- locations where execution is healthy but availability limits scale.
+
+This prevents the business from incorrectly treating every low-offtake outlet as a promoter problem.
+
+---
+
+### 5. Outlet Opportunity Engine
+
+The analytics combine shopper relevance, engagement, conversion and availability to prioritise outlets.
+
+Typical action groups include:
+
+| Action | Interpretation |
 |---|---|
-| Walk-ins | Total shoppers observed at the outlet |
-| Relevant shoppers | Shoppers matching the target consumer profile |
-| Category shopper % | Relevant shoppers ÷ Walk-ins |
-| Interactions | Shoppers engaged by the promoter |
-| Interaction rate | Interactions ÷ Relevant shoppers |
-| Samples | Samples / trials given |
-| Sampling rate | Samples ÷ Interactions |
-| Buyers | Shoppers who purchased |
-| Conversion | Buyers ÷ Interactions |
-| Offtake | Quantity sold from the outlet |
-| Offtake / Buyer | Offtake ÷ Buyers |
-| Mandays | Promoter-days deployed at outlets |
-| Stockout intensity | Stockout observations ÷ eligible SKU-outlet-days |
+| **Scale** | Strong relevance, healthy execution and available headroom |
+| **Protect** | Strong current performance that should be maintained |
+| **Fix** | Attractive opportunity with a clear execution or availability gap |
+| **Deprioritize** | Structurally weak outlet opportunity |
 
-A more detailed KPI dictionary is available in [`docs/KPI_DICTIONARY.md`](docs/KPI_DICTIONARY.md).
+### Example: Outlet Opportunity Matrix
+
+![Outlet opportunity matrix](docs/images/outlet-opportunity-matrix.png)
+
+The purpose of this layer is to move from:
+
+**metric → diagnosis → priority → action**
 
 ---
 
-## Analytical Questions Answered
+## Automated Weekly Performance Flash
 
-This project is built to answer business questions rather than only display metrics:
+The project also converts the analytical output into a business-facing HTML email.
 
-1. **Where is conversion breaking down?**
-2. **Is an outlet underperforming because of promoter execution or weak shopper relevance?**
-3. **Which outlets have demand but are constrained by stock availability?**
-4. **Which stores have the strongest potential to scale?**
-5. **Where should promoter effort be increased, reduced or redirected?**
-6. **Which SKUs create the highest stockout risk?**
-7. **Which cities / channels outperform their peer benchmarks?**
-8. **What should the field team do next?**
+A representative synthetic weekly run reports:
+
+| KPI | Current period | Change vs previous period |
+|---|---:|---:|
+| Conversion | 53.9% | -0.1 pp |
+| Relevant Shoppers | 6,665 | +0.8% |
+| Availability | 100.0% | +1.3 pp |
+| Offtake / Manday | 10.0 | +0.6% |
+
+The email is not limited to headline KPIs. It includes sections such as:
+
+- **What requires action?**
+- **Healthy conversion — likely performance driver**
+- **Where can we sell more?**
+- outlet-level evidence,
+- recommended field actions,
+- funnel diagnostics,
+- opportunity views.
+
+A sample generated HTML output is included here:
+
+[`outputs/email_flash/sample_weekly_performance_flash.html`](outputs/email_flash/sample_weekly_performance_flash.html)
+
+This is a key part of the project: insights are delivered in a format stakeholders can consume directly without opening an analytics notebook.
+
+---
+
+## Business Questions Answered
+
+The engine is designed around practical retail decisions:
+
+1. Which outlets require immediate action?
+2. Is weak offtake caused by outlet relevance, promoter execution, conversion or availability?
+3. Which promoters are engaging fewer relevant shoppers than comparable outlets?
+4. Where is healthy conversion being driven by stronger engagement?
+5. Which outlets have demand and execution strength but still have headroom to grow?
+6. Which SKUs / outlets are repeatedly affected by stockouts?
+7. Which outlets should be scaled, protected, fixed or deprioritized?
+8. What is the recommended action for each priority outlet?
+
+---
+
+## Core KPI Framework
+
+| KPI | Definition | Why it matters |
+|---|---|---|
+| Walk-ins | Total shoppers observed | Available shopper traffic |
+| Relevant Shoppers | Shoppers matching the target consumer profile | Outlet relevance |
+| Category Shopper % | Relevant Shoppers ÷ Walk-ins | Share of traffic that is commercially relevant |
+| Interactions | Relevant shoppers engaged by promoter | Engagement volume |
+| Interaction Rate | Interactions ÷ Relevant Shoppers | Promoter engagement effectiveness |
+| Samples | Samples / trials delivered | Trial-generation activity |
+| Sampling Rate | Samples ÷ Interactions | Movement from engagement to trial |
+| Buyers | Shoppers who purchased | Conversion output |
+| Conversion | Buyers ÷ Interactions | Effectiveness of promoter interaction |
+| Offtake | Quantity sold | Core sales output |
+| Mandays | Promoter × outlet × working day | Deployment denominator |
+| Offtake / Manday | Offtake ÷ Mandays | Promoter/store productivity |
+| Availability % | Available eligible SKU-outlet-days ÷ eligible SKU-outlet-days | Inventory health |
+| Stockout Intensity | Stockout observations ÷ eligible SKU-outlet-days | Availability failure intensity |
+
+See [`docs/KPI_DICTIONARY.md`](docs/KPI_DICTIONARY.md) for the detailed KPI definitions.
+
+---
+
+## Analytical Approach
+
+### Funnel decomposition
+Sales performance is decomposed into shopper relevance, engagement and conversion rather than analysed as a single number.
+
+### Peer benchmarking
+Outlet performance is compared against meaningful peers so a store is not judged only against an overall average.
+
+### Exception-based reporting
+The recurring report focuses attention on stores with identifiable problems rather than presenting every store with equal prominence.
+
+### Evidence before recommendation
+Outlet recommendations are accompanied by the metrics that triggered the diagnosis.
+
+### Analytical guardrails
+Observational relationships are treated as signals. The project does not claim causal impact where the data cannot support it.
 
 ---
 
@@ -138,35 +226,38 @@ This project is built to answer business questions rather than only display metr
 
 ```mermaid
 flowchart LR
-    A[Daily Retail Activation Data] --> B[Python / pandas Processing]
-    B --> C[Data Validation & KPI Layer]
-    C --> D[Outlet / City / Channel Intelligence]
-    D --> E[Interactive Dashboard]
-    D --> F[Weekly HTML Email Flash]
-    F --> G[Leadership / Sales Action]
+    A[Daily Store / Promoter Files] --> B[File Validation]
+    B --> C[Python + pandas Processing]
+    C --> D[KPI & Diagnostic Layer]
+    D --> E[Outlet / Peer / SKU Intelligence]
+    E --> F[Action Prioritisation]
+    F --> G[HTML Weekly Performance Flash]
+    G --> H[Business Stakeholders]
+
+    C --> I[Exception & Data Quality Checks]
+    I --> G
 ```
 
-The architecture is intentionally lightweight: the focus is on **reliable KPI logic, repeatable analysis and decision-ready communication**.
+The workflow is designed so the recurring business output can be automated rather than manually rebuilt each week.
 
 ---
 
 ## Tech Stack
 
-| Layer | Tools |
+| Area | Tools |
 |---|---|
 | Data processing | Python, pandas |
 | Analysis | Python |
-| Visualisation | Plotly / HTML-CSS |
+| Data input / working format | Excel / CSV |
+| Visual output | HTML, CSS, generated charts |
 | Reporting | Responsive HTML email |
 | Automation | Google Cloud Run, Google Apps Script |
-| Source / working files | Excel / CSV |
+| File management / integration | Google Drive API |
 | Version control | Git, GitHub |
 
 ---
 
-## Project Structure
-
-Recommended recruiter-facing structure:
+## Repository Structure
 
 ```text
 traya-retail-intelligence/
@@ -175,93 +266,93 @@ traya-retail-intelligence/
 ├── .gitignore
 │
 ├── data/
-│   ├── sample/
-│   └── README.md
+│   └── ... synthetic / sample inputs
 │
 ├── src/
-│   ├── data_processing/
-│   ├── metrics/
-│   ├── reporting/
-│   └── utils/
+│   └── ... analytics and reporting logic
 │
-├── outputs/
-│   ├── dashboard/
-│   └── email_flash/
-│
-├── docs/
-│   ├── KPI_DICTIONARY.md
-│   └── images/
+├── scripts/
+│   └── ... pipeline / execution scripts
 │
 ├── notebooks/
-│   └── exploratory_analysis.ipynb
+│   └── ... exploratory analysis, where applicable
 │
-└── scripts/
-    └── run_pipeline.py
+├── outputs/
+│   └── email_flash/
+│       └── sample_weekly_performance_flash.html
+│
+└── docs/
+    ├── KPI_DICTIONARY.md
+    └── images/
+        ├── conversion-funnel.png
+        └── outlet-opportunity-matrix.png
 ```
 
-Keep raw / confidential files out of GitHub. Publish only synthetic or sample data.
-
----
-
-## Key Design Choices
-
-### Business-first KPI design
-The metrics are structured around operational decisions rather than vanity reporting.
-
-### Peer benchmarking
-Outlet performance can be compared against **City + Channel peers**, making benchmarks more meaningful than a single overall average.
-
-### Funnel diagnostics
-The funnel isolates *where* performance is leaking rather than treating low sales as one undifferentiated problem.
-
-### Action-oriented output
-The system is designed to move from:
-
-**metric → diagnosis → recommended action**
-
-instead of ending with a dashboard.
-
-### Synthetic portfolio data
-All published data is fabricated so the project can demonstrate the analytical approach without exposing company-sensitive information.
+> The exact code folders in the repository remain the source of truth. Raw / confidential business files should never be committed.
 
 ---
 
 ## Example Outputs
 
-Add 3–5 strong screenshots here before finalising the repository:
+### A. Conversion Funnel
 
-1. **Executive Control Tower**
-2. **Conversion & Shopper Intelligence**
-3. **Availability & SKU Intelligence**
-4. **Outlet Opportunity Engine**
-5. **Weekly Performance Flash**
+![Conversion funnel](docs/images/conversion-funnel.png)
 
-Recommended folder:
+**What it demonstrates:** the analysis identifies where the shopper journey is leaking instead of only reporting final offtake.
 
-```text
-docs/images/
-```
+---
 
-Then embed them in this README, for example:
+### B. Outlet Opportunity Matrix
 
-```markdown
-![Executive Control Tower](docs/images/executive-control-tower.png)
-```
+![Outlet opportunity matrix](docs/images/outlet-opportunity-matrix.png)
+
+**What it demonstrates:** outlets can be prioritised based on business opportunity rather than ranked on a single KPI.
+
+---
+
+### C. Weekly Performance Flash
+
+The generated stakeholder email combines:
+
+- KPI movement,
+- outlet exceptions,
+- peer evidence,
+- recommended action,
+- opportunity identification,
+- supporting charts.
+
+Open the representative output:
+
+**[View sample weekly HTML report](outputs/email_flash/sample_weekly_performance_flash.html)**
+
+---
+
+## Data Quality & Reliability Controls
+
+The reporting workflow is designed to handle common operational-data issues, including:
+
+- dynamic input-column detection,
+- multiple date formats,
+- duplicate file controls,
+- missing-file checks,
+- configurable channel exclusions,
+- masked outlet identifiers,
+- validation before KPI calculation.
+
+These controls matter because a recurring analytics product is only useful when the business can trust the refresh.
 
 ---
 
 ## How to Run
 
-### 1. Clone the repository
+The project is designed as a Python-based analysis and reporting workflow.
+
+A typical local workflow is:
 
 ```bash
 git clone https://github.com/Kruze-13/traya-retail-intelligence.git
 cd traya-retail-intelligence
-```
 
-### 2. Create a virtual environment
-
-```bash
 python -m venv .venv
 ```
 
@@ -277,66 +368,49 @@ macOS / Linux:
 source .venv/bin/activate
 ```
 
-### 3. Install project dependencies
+Then install the dependencies defined by the repository and run the primary project entry point.
 
-If the repository contains `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Add the synthetic input file
-
-Place the portfolio dataset in the documented sample-data location.
-
-### 5. Run the analysis / reporting pipeline
-
-Use the repository's primary runner script or notebook.
-
-> Update this section with the exact command used by the final repository before publishing.
+> **Note:** use the actual runner / requirements files present in the repository. No credentials or private data should be committed to GitHub.
 
 ---
 
 ## What This Project Demonstrates
 
-For recruiters, this project demonstrates the ability to:
+This portfolio project demonstrates the ability to:
 
-- translate an ambiguous retail problem into measurable KPIs,
-- clean and structure operational data,
-- diagnose performance using funnel and peer analysis,
-- separate demand, execution and availability drivers,
-- automate recurring analysis,
-- communicate insights through dashboards and email,
-- and turn data into concrete business actions.
+- translate an operational business problem into measurable KPIs,
+- structure messy store-level data for analysis,
+- build a shopper / conversion funnel,
+- diagnose performance rather than only describe it,
+- benchmark outlets and promoters against peers,
+- combine demand and availability signals,
+- convert analysis into outlet-level actions,
+- automate recurring reporting,
+- communicate insights through a stakeholder-ready output.
+
+The emphasis is deliberately on **business analytics + automation**, not on using complexity for its own sake.
 
 ---
 
 ## Limitations
 
-- The published dataset is synthetic and does not represent actual Traya performance.
-- The analysis is observational; it does not establish causal impact.
-- Store-level outputs depend on the quality and completeness of promoter-entered data.
-- The portfolio version prioritizes analytical clarity and reproducibility over production-scale infrastructure.
+- All published portfolio data is synthetic and should not be interpreted as actual Traya performance.
+- The analysis is observational and does not establish causal impact.
+- Store-level conclusions depend on the completeness and accuracy of operational input data.
+- Estimated opportunity / headroom is a decision-support signal, not a guaranteed sales forecast.
+- This repository is a portfolio implementation rather than a production system operated by Traya.
 
 ---
 
-## Future Enhancements
+## Potential Enhancements
 
-- Automated data-quality alerts before report generation
-- Experiment / intervention tracking by outlet
-- Predictive outlet opportunity scoring
-- Stockout risk forecasting
-- Automated narrative insight generation
-- Historical campaign effectiveness tracking
-- CI checks for KPI logic and data-quality rules
-
----
-
-## Repository Checklist
-
-Before sharing this repository with recruiters, complete the final polish checklist in:
-
-[`docs/RECRUITER_REPO_CHECKLIST.md`](docs/RECRUITER_REPO_CHECKLIST.md)
+- intervention tracking to measure whether recommended actions worked,
+- stockout risk forecasting,
+- experiment / test-control framework for promoter interventions,
+- automated anomaly alerts,
+- historical outlet opportunity tracking,
+- automated narrative insight generation,
+- CI tests for KPI logic and input-schema validation.
 
 ---
 
@@ -345,4 +419,4 @@ Before sharing this repository with recruiters, complete the final polish checkl
 **Kishan D Majithia**  
 Data Analytics | Business Intelligence | Automation
 
-https://www.linkedin.com/in/kishandmajithia/
+GitHub: [Kruze-13](https://github.com/Kruze-13)
