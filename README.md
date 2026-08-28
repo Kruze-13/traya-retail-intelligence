@@ -1,125 +1,348 @@
-# Python 3.14 Compatibility
+# Traya Retail Intelligence
 
-This package has been updated for **Python 3.14 (64-bit) on Windows**. The dependency versions in `requirements.txt` have Python 3.14-compatible wheels, so you should not need Visual Studio Build Tools or a second Python installation.
+**Retail activation analytics for promoter-led stores — from daily execution data to weekly business decisions.**
 
-For a clean Windows setup, delete any old `.venv`, create it again with your normal `python` command, activate it, upgrade pip, and install requirements:
+> **Portfolio disclaimer:** This is a portfolio case study built with synthetic / fabricated retail data and masked store identifiers. It is not an official Traya product and does not expose confidential business data.
 
-```powershell
-Remove-Item -Recurse -Force .venv
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+---
+
+## Project Overview
+
+Promoter-led retail programs generate a lot of daily execution data — shopper walk-ins, relevant shoppers, promoter interactions, sampling, conversion, offtake, stock availability and outlet-level performance.
+
+The challenge is not just reporting these numbers. The real business question is:
+
+> **Why is a store performing the way it is, and what should the business do about it?**
+
+This project turns daily retail activation data into a structured **Retail Intelligence engine** that helps identify:
+
+- where conversion is leaking,
+- whether low performance is driven by promoter execution or outlet quality,
+- which stores have stockout risk,
+- which outlets have headroom to scale,
+- which stores should be fixed, protected, scaled or deprioritized,
+- and what actions the business should take next.
+
+---
+
+## Business Context
+
+The analysis is designed around a promoter-led retail model for **Traya Hair Care**.
+
+The portfolio dataset contains:
+
+| Metric | Scope |
+|---|---:|
+| Stores | 60 |
+| Working days | 24 |
+| Store-day records | 1,440 |
+| Period | 1–28 Sep 2026 |
+| Sundays | Excluded |
+| Store identifiers | Masked |
+| Data | Fully synthetic / fabricated |
+
+The data structure mirrors a realistic in-store activation workflow while protecting all sensitive information.
+
+---
+
+## What I Built
+
+### 1. Executive Control Tower
+A leadership view that summarizes overall retail execution and quickly answers:
+
+- Are we reaching the right shoppers?
+- Are promoters converting shopper interest into buyers?
+- Which cities / channels / outlets are driving or dragging performance?
+- Where is the largest business opportunity?
+
+### 2. Conversion & Shopper Intelligence
+Breaks the funnel into:
+
+**Walk-ins → Relevant shoppers → Interactions → Samples → Buyers**
+
+This helps separate:
+
+- low shopper relevance,
+- weak promoter engagement,
+- sampling leakage,
+- and conversion problems.
+
+### 3. Availability & SKU Intelligence
+Tracks product availability and stockout intensity to identify:
+
+- stores with demand but insufficient inventory,
+- SKUs repeatedly unavailable,
+- potential lost offtake,
+- and outlet-level replenishment priorities.
+
+### 4. Outlet Opportunity Engine
+Combines execution, conversion, demand and availability signals to classify outlets into practical action buckets such as:
+
+- **Scale**
+- **Protect**
+- **Fix**
+- **Deprioritize**
+
+The goal is to turn analysis into a clear next action for the sales / retail team.
+
+### 5. Weekly Performance Flash
+A compact HTML email report designed for Gmail / Outlook delivery, summarizing:
+
+- conversion,
+- relevant shoppers,
+- offtake,
+- week-on-week movement,
+- exceptions,
+- and recommended actions.
+
+---
+
+## Core KPIs
+
+| KPI | Definition |
+|---|---|
+| Walk-ins | Total shoppers observed at the outlet |
+| Relevant shoppers | Shoppers matching the target consumer profile |
+| Category shopper % | Relevant shoppers ÷ Walk-ins |
+| Interactions | Shoppers engaged by the promoter |
+| Interaction rate | Interactions ÷ Relevant shoppers |
+| Samples | Samples / trials given |
+| Sampling rate | Samples ÷ Interactions |
+| Buyers | Shoppers who purchased |
+| Conversion | Buyers ÷ Interactions |
+| Offtake | Quantity sold from the outlet |
+| Offtake / Buyer | Offtake ÷ Buyers |
+| Mandays | Promoter-days deployed at outlets |
+| Stockout intensity | Stockout observations ÷ eligible SKU-outlet-days |
+
+A more detailed KPI dictionary is available in [`docs/KPI_DICTIONARY.md`](docs/KPI_DICTIONARY.md).
+
+---
+
+## Analytical Questions Answered
+
+This project is built to answer business questions rather than only display metrics:
+
+1. **Where is conversion breaking down?**
+2. **Is an outlet underperforming because of promoter execution or weak shopper relevance?**
+3. **Which outlets have demand but are constrained by stock availability?**
+4. **Which stores have the strongest potential to scale?**
+5. **Where should promoter effort be increased, reduced or redirected?**
+6. **Which SKUs create the highest stockout risk?**
+7. **Which cities / channels outperform their peer benchmarks?**
+8. **What should the field team do next?**
+
+---
+
+## Solution Architecture
+
+```mermaid
+flowchart LR
+    A[Daily Retail Activation Data] --> B[Python / pandas Processing]
+    B --> C[Data Validation & KPI Layer]
+    C --> D[Outlet / City / Channel Intelligence]
+    D --> E[Interactive Dashboard]
+    D --> F[Weekly HTML Email Flash]
+    F --> G[Leadership / Sales Action]
 ```
 
-Then verify:
+The architecture is intentionally lightweight: the focus is on **reliable KPI logic, repeatable analysis and decision-ready communication**.
 
-```powershell
-python --version
-python -c "import pandas, numpy, matplotlib; print('pandas', pandas.__version__); print('numpy', numpy.__version__); print('matplotlib', matplotlib.__version__)"
+---
+
+## Tech Stack
+
+| Layer | Tools |
+|---|---|
+| Data processing | Python, pandas |
+| Analysis | Python |
+| Visualisation | Plotly / HTML-CSS |
+| Reporting | Responsive HTML email |
+| Automation | Google Cloud Run, Google Apps Script |
+| Source / working files | Excel / CSV |
+| Version control | Git, GitHub |
+
+---
+
+## Project Structure
+
+Recommended recruiter-facing structure:
+
+```text
+traya-retail-intelligence/
+│
+├── README.md
+├── .gitignore
+│
+├── data/
+│   ├── sample/
+│   └── README.md
+│
+├── src/
+│   ├── data_processing/
+│   ├── metrics/
+│   ├── reporting/
+│   └── utils/
+│
+├── outputs/
+│   ├── dashboard/
+│   └── email_flash/
+│
+├── docs/
+│   ├── KPI_DICTIONARY.md
+│   └── images/
+│
+├── notebooks/
+│   └── exploratory_analysis.ipynb
+│
+└── scripts/
+    └── run_pipeline.py
+```
+
+Keep raw / confidential files out of GitHub. Publish only synthetic or sample data.
+
+---
+
+## Key Design Choices
+
+### Business-first KPI design
+The metrics are structured around operational decisions rather than vanity reporting.
+
+### Peer benchmarking
+Outlet performance can be compared against **City + Channel peers**, making benchmarks more meaningful than a single overall average.
+
+### Funnel diagnostics
+The funnel isolates *where* performance is leaking rather than treating low sales as one undifferentiated problem.
+
+### Action-oriented output
+The system is designed to move from:
+
+**metric → diagnosis → recommended action**
+
+instead of ending with a dashboard.
+
+### Synthetic portfolio data
+All published data is fabricated so the project can demonstrate the analytical approach without exposing company-sensitive information.
+
+---
+
+## Example Outputs
+
+Add 3–5 strong screenshots here before finalising the repository:
+
+1. **Executive Control Tower**
+2. **Conversion & Shopper Intelligence**
+3. **Availability & SKU Intelligence**
+4. **Outlet Opportunity Engine**
+5. **Weekly Performance Flash**
+
+Recommended folder:
+
+```text
+docs/images/
+```
+
+Then embed them in this README, for example:
+
+```markdown
+![Executive Control Tower](docs/images/executive-control-tower.png)
 ```
 
 ---
 
-# Traya Retail Activation & Conversion Email Flash
+## How to Run
 
-Email-first retail decision analytics. No standalone dashboard is required.
+### 1. Clone the repository
 
-## What it answers
-1. Is conversion healthy? Where is weak conversion, and is the likely issue engagement, conversion quality or availability?
-2. Where is there additional sales headroom despite healthy opportunity, engagement and conversion?
-3. Which outlets have weak relevant shopping and may need to be reassessed?
-4. Which outlet-SKU combinations need replenishment based on availability, days cover, safety stock and reorder point?
+```bash
+git clone https://github.com/Kruze-13/traya-retail-intelligence.git
+cd traya-retail-intelligence
+```
 
-## Architecture
-Google Drive workbook -> Cloud Run (Python/pandas) -> diagnostic rules + PNG visuals + HTML tables -> Apps Script -> Gmail.
+### 2. Create a virtual environment
 
-Only the `Traya Hair Care` sheet is loaded. Other sheets are ignored.
-
-## Key analytical definitions
-- Outlet conversion = Shoppers Sold To / Hair Care Shoppers
-- Interaction rate = Promoter Interacted With / Hair Care Shoppers
-- Promoter conversion = Shoppers Sold To / Promoter Interactions
-- Relevant shopper rate = Hair Care Shoppers / Walk-ins
-- Peer benchmark = median of same City + Channel outlets
-- Availability = 1 - (closing-stock-zero SKU-days / eligible SKU-days)
-- Safety stock = z * std(daily demand) * sqrt(lead time)
-- Reorder point = avg daily demand * lead time + safety stock
-- Scale headroom = relevant shoppers * (peer top-quartile conversion - current conversion) * units/buyer
-
-`REPLENISHMENT_LEAD_TIME_DAYS` defaults to 2 and `SAFETY_STOCK_Z` to 1.65 (approx. 95% service factor). Change these to match the business.
-
-Promoter-supported vs outlet-pull is treated as a signal, not causal proof. It compares the same outlet's conversion on high- vs low-engagement days.
-
-## Local test on Windows
-1. Put the workbook at `data/traya_input.xlsx` OR set LOCAL_DATA_PATH to your existing workbook.
-2. In PowerShell:
-
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\activate
+```
+
+Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+macOS / Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install project dependencies
+
+If the repository contains `requirements.txt`:
+
+```bash
 pip install -r requirements.txt
-$env:LOCAL_DATA_PATH="C:\path\to\SPG_Dummy_Promoter_Data_Traya_WholeTruth(2).xlsx"
-$env:APP_API_KEY="local-test-key"
-python app.py
 ```
 
-Flask dev server defaults to port 5000. Test:
+### 4. Add the synthetic input file
 
-```powershell
-curl.exe -H "X-API-Key: local-test-key" "http://127.0.0.1:5000/report?cadence=weekly"
-```
+Place the portfolio dataset in the documented sample-data location.
 
-## Google Cloud setup
-Enable Cloud Run, Cloud Build, Artifact Registry and Drive API.
+### 5. Run the analysis / reporting pipeline
 
-```powershell
-gcloud auth login
-gcloud config set project YOUR_PROJECT_ID
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com drive.googleapis.com
+Use the repository's primary runner script or notebook.
 
-gcloud iam service-accounts create traya-retail-flash --display-name="Traya Retail Flash"
-```
+> Update this section with the exact command used by the final repository before publishing.
 
-Create a Google Drive folder, upload the workbook, and share that folder as Viewer with:
-`traya-retail-flash@YOUR_PROJECT_ID.iam.gserviceaccount.com`
+---
 
-Copy the Drive folder ID from its URL.
+## What This Project Demonstrates
 
-Generate an API key:
-```powershell
-python -c "import secrets; print(secrets.token_urlsafe(32))"
-```
+For recruiters, this project demonstrates the ability to:
 
-Deploy:
-```powershell
-gcloud run deploy traya-retail-flash `
-  --source . `
-  --region asia-south1 `
-  --allow-unauthenticated `
-  --service-account traya-retail-flash@YOUR_PROJECT_ID.iam.gserviceaccount.com `
-  --set-env-vars DRIVE_FOLDER_ID=YOUR_FOLDER_ID,APP_API_KEY=YOUR_KEY,REPLENISHMENT_LEAD_TIME_DAYS=2,SAFETY_STOCK_Z=1.65
-```
+- translate an ambiguous retail problem into measurable KPIs,
+- clean and structure operational data,
+- diagnose performance using funnel and peer analysis,
+- separate demand, execution and availability drivers,
+- automate recurring analysis,
+- communicate insights through dashboards and email,
+- and turn data into concrete business actions.
 
-The service URL can be public because `/report` still requires the X-API-Key. `/health` contains no business data.
+---
 
-## Apps Script setup
-1. Create a new Google Apps Script project.
-2. Paste `apps_script/Code.gs`.
-3. Project Settings -> Script Properties:
-   - CLOUD_RUN_URL = Cloud Run service URL (no trailing slash)
-   - APP_API_KEY = same key used above
-   - RECIPIENTS = comma-separated Gmail addresses
-4. Run `testWeeklyFlash()` once and authorize.
-5. Run `createWeeklyTrigger()` for Monday ~8 AM IST.
-6. Optional: run `createDailyTrigger()` for a daily ~8 PM exception flash.
+## Limitations
 
-## Email structure
-- 4 headline KPIs: conversion, relevant shoppers, availability, offtake/manday
-- What requires action? (max 5 outlets)
-- Where can we sell more? (max 5 outlets)
-- Are we in the right outlets? (max 5 outlets)
-- Availability actions (max 5 outlet-SKU rows)
-- 2 PNG visuals: funnel + conversion diagnostic matrix
+- The published dataset is synthetic and does not represent actual Traya performance.
+- The analysis is observational; it does not establish causal impact.
+- Store-level outputs depend on the quality and completeness of promoter-entered data.
+- The portfolio version prioritizes analytical clarity and reproducibility over production-scale infrastructure.
 
-The HTML uses tables + inline styles for Gmail/Outlook compatibility; charts are PNGs embedded as CID images.
+---
+
+## Future Enhancements
+
+- Automated data-quality alerts before report generation
+- Experiment / intervention tracking by outlet
+- Predictive outlet opportunity scoring
+- Stockout risk forecasting
+- Automated narrative insight generation
+- Historical campaign effectiveness tracking
+- CI checks for KPI logic and data-quality rules
+
+---
+
+## Repository Checklist
+
+Before sharing this repository with recruiters, complete the final polish checklist in:
+
+[`docs/RECRUITER_REPO_CHECKLIST.md`](docs/RECRUITER_REPO_CHECKLIST.md)
+
+---
+
+## Author
+
+**Kishan D Majithia**  
+Data Analytics | Business Intelligence | Automation
+
+Add your LinkedIn and portfolio links here.

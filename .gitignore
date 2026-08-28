@@ -1,5 +1,42 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
 .venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets / config
 .env
-output/*.png
+.env.*
+*.pem
+*.key
+credentials.json
+service-account*.json
+
+# Data - keep confidential / raw files out of Git
+data/raw/
+data/private/
+*.xlsb
+
+# Local outputs / temp
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+~$*
+
+# IDE
+.vscode/
+.idea/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Optional generated caches
+.cache/
