@@ -312,18 +312,22 @@ traya-retail-intelligence/
 
 ### C. Weekly Performance Flash
 
-The generated stakeholder email combines:
+![Weekly Performance Flash](docs/images/weekly-performance-flash.png)
+
+**What it demonstrates:** the project does not stop at analysis. The output is converted into a stakeholder-ready weekly email that combines:
 
 - KPI movement,
 - outlet exceptions,
 - peer evidence,
-- recommended action,
+- recommended actions,
 - opportunity identification,
 - supporting charts.
 
-Open the representative output:
+The email is designed so a business stakeholder can understand **what changed, where attention is required, why it matters, and what action to take next** without opening a notebook or dashboard.
 
-**[View sample weekly HTML report](outputs/email_flash/sample_weekly_performance_flash.html)**
+For technical reviewers, the generated HTML source is also included in the repository:
+
+**[View source HTML](outputs/email_flash/sample_weekly_performance_flash.html)**
 
 ---
 
