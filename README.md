@@ -345,4 +345,4 @@ Before sharing this repository with recruiters, complete the final polish checkl
 **Kishan D Majithia**  
 Data Analytics | Business Intelligence | Automation
 
-Add your LinkedIn and portfolio links here.
+https://www.linkedin.com/in/kishandmajithia/
